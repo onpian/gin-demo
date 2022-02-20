@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	//"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -69,7 +69,6 @@ func main() {
 func isTelPhoneExist(db *gorm.DB, phone string) bool {
 	var user User
 	db.Where("telphone=?", phone).First(&user)
-	fmt.Println("看看啥意思", &user)
 	if user.ID != 0 {
 		return true
 	}
@@ -96,28 +95,24 @@ func InitDB() *gorm.DB {
 
 	f, err := os.Open("conf/db.json")
 	if err != nil {
-		fmt.Println("打开文件失败!", err)
+		panic(err)
 	}
 	defer f.Close()
 	jsonByte, err2 := ioutil.ReadAll(f)
-	fmt.Println(string(jsonByte))
-
 	if err2 != nil {
-		fmt.Println(err2)
-		panic("JSON配置文件读取失败!")
+ 
+		log.Fatal("JSON配置文件读取失败!",err2)
 	}
 	var linkStr LinkStr
 	err3 := json.Unmarshal(jsonByte, &linkStr)
 	if err3 != nil {
-		fmt.Println("看看ERR3", err3)
-		panic("JSON配置文件读取失败!")
+ 		log.Fatal(,err3)
 	}
-
 	args := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local", linkStr.RootName, linkStr.PassWord,
 		linkStr.Host, linkStr.Port, linkStr.DataBase, linkStr.Charset)
 	db, err4 := gorm.Open("mysql", args)
 	if err4 != nil {
-		log.Fatal("	db, err4 := gorm.Open err: ", err4)
+		log.Fatal("db, err4 := gorm.Open err: ", err4)
 	}
 	if !db.HasTable("user") {
 		db.AutoMigrate(&User{})
