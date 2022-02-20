@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+
 	//"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -106,7 +108,7 @@ func InitDB() *gorm.DB {
 	var linkStr LinkStr
 	err3 := json.Unmarshal(jsonByte, &linkStr)
 	if err3 != nil {
- 		log.Fatal(,err3)
+ 		log.Fatal("JSON解析失败",err3)
 	}
 	args := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local", linkStr.RootName, linkStr.PassWord,
 		linkStr.Host, linkStr.Port, linkStr.DataBase, linkStr.Charset)
