@@ -2,13 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	//"fmt"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"io/ioutil"
 	"os"
-
 	//_ "github.com/spf13/viper"
 	"log"
 	"math/rand"
@@ -47,7 +46,6 @@ func main() {
 			username = RandomString(6)
 		}
 		log.Println(username, password, telphone)
-
 		//查询手机号
 		if isTelPhoneExist(Db, telphone) == true {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "用户已注册!"})
@@ -100,13 +98,12 @@ func InitDB() *gorm.DB {
 	defer f.Close()
 	jsonByte, err2 := ioutil.ReadAll(f)
 	if err2 != nil {
- 
-		log.Fatal("JSON配置文件读取失败!",err2)
+		log.Fatal("JSON配置文件读取失败!", err2)
 	}
 	var linkStr LinkStr
 	err3 := json.Unmarshal(jsonByte, &linkStr)
 	if err3 != nil {
- 		log.Fatal(,err3)
+		log.Fatal("JSON解析失败", err3)
 	}
 	args := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local", linkStr.RootName, linkStr.PassWord,
 		linkStr.Host, linkStr.Port, linkStr.DataBase, linkStr.Charset)
