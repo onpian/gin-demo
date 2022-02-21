@@ -43,6 +43,7 @@ func main() {
 			return
 		}
 		if len(username) == 0 {
+			//如果用户未提交昵称 则自动生成一个CC+6个数字昵称
 			username = RandomString(6)
 		}
 		log.Println(username, password, telphone)
