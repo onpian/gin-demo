@@ -93,23 +93,23 @@ func InitDB() *gorm.DB {
 
 	f, err := os.Open("conf/db.json")
 	if err != nil {
-		panic(err)
+		log.Fatal("JSON配置文件读取失败!", err)
 	}
 	defer f.Close()
-	jsonByte, err2 := ioutil.ReadAll(f)
-	if err2 != nil {
-		log.Fatal("JSON配置文件读取失败!", err2)
+	jsonByte, err := ioutil.ReadAll(f)
+	if err != nil {
+		log.Fatal("JSON配置文件读取失败!", err)
 	}
 	var linkStr LinkStr
-	err3 := json.Unmarshal(jsonByte, &linkStr)
-	if err3 != nil {
-		log.Fatal("JSON解析失败", err3)
+	err = json.Unmarshal(jsonByte, &linkStr)
+	if err != nil {
+		log.Fatal("JSON解析失败", err)
 	}
 	args := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local", linkStr.RootName, linkStr.PassWord,
 		linkStr.Host, linkStr.Port, linkStr.DataBase, linkStr.Charset)
-	db, err4 := gorm.Open("mysql", args)
-	if err4 != nil {
-		log.Fatal("db, err4 := gorm.Open err: ", err4)
+	db, err := gorm.Open("mysql", args)
+	if err != nil {
+		log.Fatal("db, err := gorm.Open err: ", err)
 	}
 	if !db.HasTable("user") {
 		db.AutoMigrate(&User{})
